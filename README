@@ -1,0 +1,38 @@
+## Results
+Each of the 20 attacks was run twice (40 runs per level). Replies were
+scored automatically by checking for the secret values, then verified
+by reading every flagged reply.
+
+| Level | Attack success rate |
+|---|---|
+| 1. Naive (no security rules) | 15% (6 of 40) |
+| 2. With rules | 0% (0 of 40) |
+| 3. Strict prompt | 0% (0 of 40) |
+| 4. Strict prompt + output filter | 0% (0 of 40) |
+
+Naive bot, by category: role-play 20%, extraction 20%, indirect 20%,
+instruction override 0%.
+
+## Findings
+- Without security rules, the chatbot leaked confidential data in 3 of
+  20 distinct attacks: the admin password inside a role-play story, a
+  customer balance on a direct question, and the full customer record
+  when an instruction was hidden in a spell-check task.
+- Adding explicit security rules reduced successful attacks to 0% on
+  this set.
+- Levels 3 and 4 showed no further improvement because level 2 was
+  already at 0%, so the extra value of the strict prompt and the output
+  filter is not demonstrated by these attacks.
+
+## Limitations
+- Small attack set (20 attacks); results are indicative only.
+- Temperature was 0, so repeated runs gave nearly identical replies and
+  the two runs per attack are not independent samples.
+- One model (gpt-4o-mini); other models may behave differently.
+- The scorer uses string matching. An early version counted the customer
+  name alone as a leak and overstated the naive rate (20%), which I
+  corrected after reading the replies by hand. It could still miss a
+  leak in a disguised form.
+- Prompt injection has no complete fix; 0% on these attacks does not mean
+  the chatbot is secure.
+- All secrets are fake, and only my own chatbot was attacked.
